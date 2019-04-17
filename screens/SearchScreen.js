@@ -1,24 +1,35 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Container, Header, Content, Form, Item, Input, Button, Picker, Icon } from 'native-base';
+import { StyleSheet, Text, View, Image} from 'react-native';
+import { Container, Item, Content} from 'native-base';
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             navigate: props.navigation,
-            query: props.navigation.state.params.query
+            jokes: props.navigation.state.params.jokes
         };
 
       }
-    
+
+
     render() {
       return (
         <View>
-            <Text>
-                {this.state.query}
-            </Text>
+                {this.state.jokes.map((value)=>
+                    <Text style={styles.joke} key={value.id}>{value.value}</Text>
+                )}
         </View>
       );
     }
   }
+
+  const styles = StyleSheet.create({
+
+    joke:{
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 18,
+        margin: 10
+    }
+  });

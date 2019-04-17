@@ -47,24 +47,24 @@ class MainScreen extends React.Component {
 
     handleSubmit(event) {
         //alert(this.state.piker);
-        // fetch(`https://api.chucknorris.io/jokes/search?query=${this.state.search}`)
-        //   .then(res => res.json())
-        //   .then(
-        //     (result) => {
-        //         alert(result.result[0].value); 
-        //     },
-        //     (error) => {
-        //         alert(error);
-        //     }
-        //   )
-        this.props.navigation.navigate('Search', { query: 'Brent' })
+        fetch(`https://api.chucknorris.io/jokes/search?query=${this.state.search}`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+                this.props.navigation.navigate('Search', { jokes: result.result })
+            },
+            (error) => {
+                alert(error);
+            }
+          )
+        
         event.preventDefault();
     }
 
 
 
 
-    componentDidMount() {
+    componentWillMount() {
         fetch("https://api.chucknorris.io/jokes/categories")
           .then(res => res.json())
           .then(
@@ -83,7 +83,6 @@ class MainScreen extends React.Component {
   render() {
     return (
      <Container>
-        <Header />
         <Content>
           <Form>
             <Item>
