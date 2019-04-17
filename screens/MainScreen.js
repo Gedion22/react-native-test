@@ -1,18 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Container, Header, Content, Form, Item, Input, Button, Picker, Icon } from 'native-base';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+import SearchScreen from './SearchScreen'
 
-export default class MainScreen extends React.Component {
+class MainScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             categories: [],
-            value: '',
+            search: '',
             piker: '',
             joke:''
         };
     
-        //this.handleChange = this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.changePicker = this.changePicker.bind(this);
     }
@@ -37,11 +39,29 @@ export default class MainScreen extends React.Component {
         
     }
 
+    handleChange(value){
+        this.setState({
+            search: value
+        });
+    }
+
     handleSubmit(event) {
-        alert(this.state.piker);
-        //alert('A name was submitted: ' + this.state.value);
+        //alert(this.state.piker);
+        // fetch(`https://api.chucknorris.io/jokes/search?query=${this.state.search}`)
+        //   .then(res => res.json())
+        //   .then(
+        //     (result) => {
+        //         alert(result.result[0].value); 
+        //     },
+        //     (error) => {
+        //         alert(error);
+        //     }
+        //   )
+        this.props.navigation.navigate('Search', { query: 'Brent' })
         event.preventDefault();
     }
+
+
 
 
     componentDidMount() {
@@ -67,7 +87,7 @@ export default class MainScreen extends React.Component {
         <Content>
           <Form>
             <Item>
-              <Input placeholder="Search" />
+              <Input onChangeText={this.handleChange} placeholder="Search" />
               <Button primary style={styles.button} onPress={this.handleSubmit}><Text> Search </Text></Button>
             </Item>
           </Form>
@@ -99,6 +119,26 @@ export default class MainScreen extends React.Component {
     );
   }
 }
+
+const RootStack = createStackNavigator(
+    {
+        Main: MainScreen,
+        Search: SearchScreen,
+    },
+    {
+      initialRouteName: 'Main',
+    }
+  );
+const AppContainer = createAppContainer(RootStack);
+
+export default class MainContainer extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
+}
+
+
+
 
 
 const styles = StyleSheet.create({
