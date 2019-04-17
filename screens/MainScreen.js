@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Container, Header, Content, Form, Item, Input, Button, Picker, Icon } from 'native-base';
 
 export default class MainScreen extends React.Component {
@@ -8,7 +8,8 @@ export default class MainScreen extends React.Component {
         this.state = {
             categories: [],
             value: '',
-            piker: ''
+            piker: '',
+            joke:''
         };
     
         //this.handleChange = this.handleChange.bind(this);
@@ -20,6 +21,19 @@ export default class MainScreen extends React.Component {
         this.setState({
             piker: value
         })
+        fetch(`https://api.chucknorris.io/jokes/random?category=${value}`)
+          .then(res => res.json())
+          .then(
+            (result) => {
+              this.setState({
+                joke: result.value
+              }); 
+            //alert(result.value) 
+            },
+            (error) => {
+                alert(error);
+            }
+          )
         
     }
 
@@ -37,14 +51,10 @@ export default class MainScreen extends React.Component {
             (result) => {
               this.setState({
                 categories: result
-              });
-            //  alert(result);
+              });  
             },
             (error) => {
-              // this.setState({
-              //   isLoaded: true,
-              //   error
-              // });
+                alert(error);
             }
           )
       }
@@ -76,25 +86,14 @@ export default class MainScreen extends React.Component {
                 {this.state.categories.map((value) =>
                     <Picker.Item key={value} label={value[0].toUpperCase() + value.slice(1)} value={value} />
                 )}
-
-                {/* <Picker.Item label="explicit" value="explicit" />
-                <Picker.Item label="dev" value="dev" />
-                <Picker.Item label="movie" value="movie" />
-                <Picker.Item label="food" value="food" />
-                <Picker.Item label="celebrity" value="celebrity" />
-                <Picker.Item label="science" value="science" />
-                <Picker.Item label="sport" value="sport" />
-                <Picker.Item label="political" value="political" />
-                <Picker.Item label="religion" value="religion" />
-                <Picker.Item label="Net" value="key4" />
-                <Picker.Item label="Net" value="key4" />
-                <Picker.Item label="Net" value="key4" />
-                <Picker.Item label="Net" value="key4" />
-                <Picker.Item label="Net" value="key4" />
-                <Picker.Item label="Net" value="key4" /> */}
               </Picker>
             </Item>
           </Form> 
+          <View>
+                <Text style={styles.joke}>
+                    {this.state.joke}
+                </Text>
+           </View>
         </Content>
       </Container>
     );
@@ -106,4 +105,10 @@ const styles = StyleSheet.create({
     button: {
       height: '100%'
     },
+    joke:{
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginTop: 20
+    }
   });
